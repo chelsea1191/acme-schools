@@ -2,47 +2,68 @@ const pg = require("pg");
 const { Client } = pg;
 const uuid = require("uuid/v4");
 const client = new Client(
-  process.env.DATABASE_URL || "postgres://localhost/boilerplatedb"
+  process.env.DATABASE_URL || "postgres://localhost/schools"
 );
 const faker = require("faker");
 
 client.connect();
 
 const sync = async () => {
-  const SQL = `    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-  DROP TABLE IF EXISTS user_things;
-  DROP TABLE IF EXISTS things;
-  DROP TABLE IF EXISTS users;
+  const SQL = `
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+  DROP TABLE IF EXISTS student_school;
+  DROP TABLE IF EXISTS school;
+  DROP TABLE IF EXISTS student;
 
-  CREATE TABLE users
+  CREATE TABLE school
   (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(100) NOT NULL,
-    date_create TIMESTAMP default CURRENT_TIMESTAMP,
-    CHECK (char_length(name) > 0)
-  );
-  CREATE TABLE things (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     CHECK (char_length(name) > 0)
   );
-  CREATE TABLE user_things (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "thingId" UUID REFERENCES things(id),
-    "userId" UUID REFERENCES users(id),
-    "isFavorite" BOOLEAN DEFAULT FALSE
+  CREATE TABLE student
+  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    "isEnrolled" BOOLEAN default false,
+    CHECK (char_length(name) > 0)
   );
-  CREATE UNIQUE INDEX ON user_things("thingId", "userId");
-  INSERT INTO users (name) VALUES ('userName');
+  CREATE TABLE student_school
+  (
+    id SERIAL PRIMARY KEY,
+    "studentId" SERIAL REFERENCES student(id),
+    "schoolId" SERIAL REFERENCES school(id)
+  );
+  CREATE UNIQUE INDEX ON student_school("studentId", "schoolId");
+  INSERT INTO student (name, "isEnrolled") VALUES ('Lucy', 'true');
+  INSERT INTO student (name, "isEnrolled") VALUES ('Moe', 'true');
+  INSERT INTO student (name) VALUES ('Sally');
+  INSERT INTO student (name) VALUES ('Curly');
+  INSERT INTO school (name) VALUES ('UF');
+  INSERT INTO school (name) VALUES ('UNF');
+  INSERT INTO school (name) VALUES ('FSU');
+  INSERT INTO student_school ("studentId", "schoolId") VALUES ('1','1');
+  INSERT INTO student_school ("studentId", "schoolId") VALUES ('2','2');
   `;
   await client.query(SQL);
 };
-//////////////////get///////////////////
-// const readUsers = async () => {
-//   const SQL = `SELECT * FROM users;`;
-//   const response = await client.query(SQL);
-//   return response.rows;
-// };
+////////////////get///////////////////
+const readSchools = async () => {
+  const SQL = `SELECT * FROM school;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+const readStudents = async () => {
+  const SQL = `SELECT * FROM student;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+const readStudentSchools = async () => {
+  const SQL = `SELECT * FROM student_school;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
 //////////////////post///////////////////
 // const createUser = async ({ name }) => {
 //   const SQL = `INSERT INTO users (name) VALUES ($1) returning *;`;
@@ -62,5 +83,8 @@ const sync = async () => {
 // };
 
 module.exports = {
-  sync
+  sync,
+  readSchools,
+  readStudents,
+  readStudentSchools
 };

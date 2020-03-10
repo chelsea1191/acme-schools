@@ -7,8 +7,6 @@ const fs = require("fs");
 const db = require("./db");
 const bodyParser = require("body-parser");
 
-//to change git remote: git remote set-url origin (new.git.url/here)
-
 //////////////////use///////////////////
 app.use(express.json());
 app.use(
@@ -22,12 +20,24 @@ app.use("/dist", express.static(path.join(__dirname, "dist")));
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/index.html"));
 });
-// app.get("/api/users", async (req, res, next) => {
-//   await db
-//     .readUsers()
-//     .then(users => res.send(users))
-//     .catch(next);
-// });
+app.get("/api/schools", async (req, res, next) => {
+  await db
+    .readSchools()
+    .then(schools => res.send(schools))
+    .catch(next);
+});
+app.get("/api/students", async (req, res, next) => {
+  await db
+    .readStudents()
+    .then(students => res.send(students))
+    .catch(next);
+});
+app.get("/api/student_schools", async (req, res, next) => {
+  await db
+    .readStudentSchools()
+    .then(student_schools => res.send(student_schools))
+    .catch(next);
+});
 
 //////////////////post////////////////////
 // app.post("/api/users", (req, res, next) => {
