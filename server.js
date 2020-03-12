@@ -32,33 +32,49 @@ app.get("/api/students", async (req, res, next) => {
     .then(students => res.send(students))
     .catch(next);
 });
-app.get("/api/student_schools", async (req, res, next) => {
+app.get("/api/studentsBySchool", async (req, res, next) => {
   await db
-    .readStudentSchools()
-    .then(student_schools => res.send(student_schools))
+    .readStudentsBySchool(req.body.schoolId)
+    .then(students => res.send(students))
+    .catch(next);
+});
+app.get("/api/unenrolledStudents", async (req, res, next) => {
+  await db
+    .readUnenrolledStudents()
+    .then(students => res.send(students))
     .catch(next);
 });
 
-//////////////////post////////////////////
-// app.post("/api/users", (req, res, next) => {
-//   db.createUser(req.body)
-//     .then(user => res.send(user))
-//     .catch(next);
-// });
-
+////////////////post////////////////////
+app.post("/api/createStudent", (req, res, next) => {
+  db.createStudent(req.body)
+    .then(student => res.send(student))
+    .catch(next);
+});
+app.post("/api/createSchool", (req, res, next) => {
+  db.createSchool(req.body)
+    .then(school => res.send(school))
+    .catch(next);
+});
 ///////////////////put////////////////////
-// app.put("/api/user_things/:id", (req, res, next) => {
-//   db.updateUserThings(req.body)
-//     .then(userThing => res.send(userThing))
-//     .catch(next);
-// });
+app.put("/api/updateStudent", (req, res, next) => {
+  db.updateStudent(req.body)
+    .then(student => res.send(student))
+    .catch(next);
+});
 
 //////////////////delete////////////////////
-// app.delete("/api/users/:id", (req, res, next) => {
-//   db.deleteUser(req.params.id)
-//     .then(() => res.sendStatus(204)) //since no return
-//     .catch(next);
-// });
+app.delete("/api/deleteStudent/:id", (req, res, next) => {
+  db.deleteStudent(req.params.id)
+    .then(() => res.sendStatus(204)) //since no return
+    .catch(next);
+});
+app.delete("/api/deleteSchool/:id", (req, res, next) => {
+  db.deleteSchool(req.params.id)
+    .then(() => res.sendStatus(204)) //since no return
+    .catch(next);
+});
+
 const port = process.env.PORT || 3000;
 db.sync()
   .then(() => {

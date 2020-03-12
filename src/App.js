@@ -1,58 +1,45 @@
 import React, { useState, useEffect } from "react";
-import Home from "./Components/Home";
-import axios from "axios";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import axios from "axios";
 
 const App = () => {
   const [students, setStudents] = useState([]);
   const [schools, setSchools] = useState([]);
-  const [student_schools, setStudentSchools] = useState([]);
-  const [numberEnrolled, setNumberEnrolled] = useState([0]);
+  const [unenrolled, setUnenrolled] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("/api/students")
-      .then(response => {
-        console.log(response.data);
-        setStudents(response.data);
+    Promise.all([
+      axios.get("/api/schools"),
+      axios.get("/api/students"),
+      axios.get("/api/unenrolledStudents")
+    ])
+      .then(responses => responses.map(response => response.data))
+      .then(results => {
+        console.log(results);
+        setSchools(results[0]);
+        setStudents(results[1]);
+        setUnenrolled(results[2]);
       })
-      .catch(ex => console.log(ex.response.data));
+      .catch(ex => setError(ex.response.data.message));
   }, []);
-  useEffect(() => {
-    axios
-      .get("/api/schools")
-      .then(response => {
-        console.log(response.data);
-        setSchools(response.data);
-      })
-      .catch(ex => console.log(ex.response.data));
-  }, []);
-  useEffect(() => {
-    axios
-      .get("/api/student_schools")
-      .then(response => {
-        console.log(response.data);
-        setStudentSchools(response.data);
-      })
-      .catch(ex => console.log(ex.response.data));
-  }, []);
-
-  const getNumberEnrolled = () => {
-    console.log("in getNumberEnrolled function");
-    students.filter();
-  };
 
   return (
     <div className="App">
-      <div>
+      <div id="header">
         <h1>Acme Schools</h1>
         <ul>
           <li>{schools.length} Schools</li>
           <li>
-            {students.length} Students ({numberEnrolled} enrolled)
+            {students.length} Students ({students.length - unenrolled.length}{" "}
+            enrolled)
           </li>
         </ul>
+      </div>
+      <div id="createStudent">
+        <CreateStudent />
+      </div>
+      <div id="createSchool">
+        <CreateSchool />
       </div>
     </div>
   );
