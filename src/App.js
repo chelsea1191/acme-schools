@@ -3,6 +3,7 @@ import CreateSchool from "./Components/CreateSchool";
 import CreateStudent from "./Components/CreateStudent";
 import Unenrolled from "./Components/Unenrolled";
 import SchoolList from "./Components/SchoolList";
+import UpdateStudent from "./Components/UpdateStudent";
 import qs from "qs";
 
 import axios from "axios";
@@ -11,13 +12,16 @@ const App = () => {
   const [students, setStudents] = useState([]);
   const [schools, setSchools] = useState([]);
   const [unenrolled, setUnenrolled] = useState([]);
+
   const [params, setParams] = useState(qs.parse(window.location.hash.slice(1)));
+
   const { view, id } = params;
 
   useEffect(() => {
     window.addEventListener("hashchange", () => {
       setParams(qs.parse(window.location.hash.slice(1)));
     });
+    console.log("params from App: ", params);
   }, []);
 
   useEffect(() => {
@@ -27,7 +31,6 @@ const App = () => {
         console.log(results);
         setSchools(results[0]);
         setStudents(results[1]);
-        setUnenrolled(results[1].filter(student => !student.schoolId));
       })
       .catch(ex => setError(ex.response.data.message));
   }, []);
@@ -61,7 +64,11 @@ const App = () => {
             <CreateSchool schools={schools} setSchools={setSchools} />
           </div>
           <div id="unenrolled">
-            <Unenrolled unenrolled={unenrolled} />
+            <Unenrolled
+              students={students}
+              unenrolled={unenrolled}
+              setUnenrolled={setUnenrolled}
+            />
           </div>
           <div id="schoolList">
             <ul>
@@ -79,6 +86,15 @@ const App = () => {
             </ul>
           </div>
         </div>
+      )}
+      {view === "student" && (
+        <UpdateStudent
+          students={students}
+          setStudents={setStudents}
+          setSchools={setSchools}
+          schools={schools}
+          params={params}
+        />
       )}
     </div>
   );

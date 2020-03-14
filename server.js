@@ -32,12 +32,6 @@ app.get("/api/students", async (req, res, next) => {
     .then(students => res.send(students))
     .catch(next);
 });
-app.get("/api/studentsBySchool", async (req, res, next) => {
-  await db
-    .readStudentsBySchool(req.body.schoolId)
-    .then(students => res.send(students))
-    .catch(next);
-});
 
 ////////////////post////////////////////
 app.post("/api/createStudent", (req, res, next) => {
@@ -51,9 +45,9 @@ app.post("/api/createSchool", (req, res, next) => {
     .catch(next);
 });
 ///////////////////put////////////////////
-app.put("/api/updateStudent", (req, res, next) => {
+app.put("/api/students/:id", (req, res, next) => {
   console.log("server side: ", req.body);
-  db.updateStudent(req.body)
+  db.updateStudent(req.body.studentName, req.body.schoolId, req.body.studentId)
     .then(student => res.send(student))
     .catch(next);
 });

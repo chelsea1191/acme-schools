@@ -3,8 +3,6 @@ import axios from "axios";
 
 const SchoolList = ({ school, students, setStudents }) => {
   const [filteredStudents, setFilteredStudents] = useState([]);
-  const [studentSelection, setStudentSelection] = useState(""); //error with initialized state???
-  const schoolId = school.id;
 
   useEffect(() => {
     const filtered = students.filter(student => {
@@ -13,16 +11,32 @@ const SchoolList = ({ school, students, setStudents }) => {
     setFilteredStudents(filtered);
   }, [students]);
 
-  const updateStudentSchool = ev => {
-    console.log("student id selected: ", ev.target.value); //yielding correct ID
-    setStudentSelection(ev.target.value);
-    console.log("studentSelection set to: ", studentSelection); //BREAKS HERE yields empty array
-    console.log("front end: ", { studentSelection, schoolId }); //yielding empty array
+  const updateStudent = (name, schoolId, studentId) => {
+    console.log("front end: ", { name, schoolId, studentId });
     axios
-      .put("/api/updateStudent", { studentSelection, schoolId })
+      .put(`/api/students/${studentId}`, {
+        studentName: name,
+        schoolId: schoolId,
+        studentId: studentId
+      })
       .then(
         axios.get("/api/students").then(response => setStudents(response.data))
-      ); //can filter instead of making another API call
+      );
+  };
+
+  const handleSelect = ev => {
+    const studentId = ev.target.value;
+    const filtered = students.find(student => {
+      return student.id == studentId;
+    });
+    updateStudent(filtered.name, school.id, filtered.id);
+  };
+
+  const handleDelete = ev => {
+    const filtered = students.find(student => {
+      return student.id == ev.target.value;
+    });
+    updateStudent(filtered.name, null, filtered.id);
   };
 
   return (
@@ -30,13 +44,13 @@ const SchoolList = ({ school, students, setStudents }) => {
       <a href={`#view=school&id=${school.id}`}>
         <h3>{school.name}</h3>
       </a>
-      <select onChange={ev => updateStudentSchool(ev)} value={studentSelection}>
-        <option value="">-- enroll student --</option>
+      <select data-id={school.id} onChange={handleSelect}>
+        <option value="none">-- enroll student --</option>
         {students
           .filter(student => student.schoolId !== school.id)
           .map(student => {
             return (
-              <option value={student.id} key={student.id}>
+              <option id={school.id} value={student.id} key={student.id}>
                 {student.name}
               </option>
             );
@@ -47,7 +61,10 @@ const SchoolList = ({ school, students, setStudents }) => {
         {filteredStudents.map(student => {
           return (
             <li key={student.id}>
-              {student.name} <button>Unenroll</button>{" "}
+              {student.name}{" "}
+              <button value={student.id} onClick={handleDelete}>
+                Unenroll
+              </button>
             </li>
           );
         })}
@@ -57,18 +74,3 @@ const SchoolList = ({ school, students, setStudents }) => {
 };
 
 export default SchoolList;
-
-// <h1>{school.name}</h1>
-//   <form>
-//     <div id="selection">
-//       <select onChange={updateStudentSchool}>
-//         {students.map(student => {
-//           return (
-//             <option value={student.id} key={student.id}>
-//               {student.name}
-//             </option>
-//           );
-//         })}
-//       </select>
-//     </div>
-//   </form>

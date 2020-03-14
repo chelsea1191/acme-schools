@@ -64,15 +64,17 @@ const createSchool = async name => {
   return response.rows[0];
 };
 //////////////////put///////////////////
-const updateStudent = async input => {
-  console.log("back end: ", input);
-  const SQL = `UPDATE student SET "schoolId" = ($2) WHERE (id) = ($1) returning *`;
+const updateStudent = async (studentName, schoolId, studentId) => {
+  console.log("back end: ", studentName, schoolId, studentId);
+  const SQL = `UPDATE student SET name = ($1), "schoolId" = ($2) WHERE (id) = ($3) returning *`;
   const response = await client.query(SQL, [
-    input.studentSelection,
-    input.schoolId
+    studentName,
+    schoolId || null,
+    studentId
   ]);
   return response.rows[0];
 };
+
 //////////////////delete///////////////////
 const deleteStudent = async id => {
   const SQL = `DELETE FROM student WHERE (id) = ($1);`;
