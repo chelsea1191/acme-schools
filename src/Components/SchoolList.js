@@ -44,7 +44,7 @@ const SchoolList = ({ school, students, setStudents }) => {
       <a href={`#view=school&id=${school.id}`}>
         <h3>{school.name}</h3>
       </a>
-      <select data-id={school.id} onChange={handleSelect}>
+      <select onChange={handleSelect}>
         <option value="none">-- enroll student --</option>
         {students
           .filter(student => student.schoolId !== school.id)

@@ -6,14 +6,12 @@ import SchoolList from "./Components/SchoolList";
 import UpdateStudent from "./Components/UpdateStudent";
 import UpdateSchool from "./Components/UpdateSchool";
 import qs from "qs";
-
 import axios from "axios";
 
 const App = () => {
   const [students, setStudents] = useState([]);
   const [schools, setSchools] = useState([]);
   const [unenrolled, setUnenrolled] = useState([]);
-
   const [params, setParams] = useState(qs.parse(window.location.hash.slice(1)));
   const { view } = params;
 

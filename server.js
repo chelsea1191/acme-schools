@@ -1,9 +1,7 @@
 const express = require("express");
 const app = express();
-const router = express.Router();
 const path = require("path");
 const morgan = require("morgan");
-const fs = require("fs");
 const db = require("./db");
 const bodyParser = require("body-parser");
 

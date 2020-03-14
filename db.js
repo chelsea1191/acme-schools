@@ -1,6 +1,5 @@
 const pg = require("pg");
 const { Client } = pg;
-const uuid = require("uuid/v4");
 const client = new Client(
   process.env.DATABASE_URL || "postgres://localhost/schools"
 );
@@ -25,10 +24,13 @@ const sync = async () => {
     "schoolId" INT REFERENCES school(id) DEFAULT NULL,
     CHECK (char_length(name) > 0)
   );
+  INSERT INTO school (name) VALUES ('Auburn');
   INSERT INTO school (name) VALUES ('UF');
-  INSERT INTO school (name) VALUES ('UNF');
-  INSERT INTO school (name) VALUES ('FSU');
+  INSERT INTO school (name) VALUES ('THE Ohio State University');
   INSERT INTO student (name, "schoolId") VALUES ('Lucy', '1');
+  INSERT INTO student (name, "schoolId") VALUES ('Monica', '1');
+  INSERT INTO student (name, "schoolId") VALUES ('Rachel', '2');
+  INSERT INTO student (name, "schoolId") VALUES ('Ross', '3');
   INSERT INTO student (name) VALUES ('Moe');
   INSERT INTO student (name) VALUES ('Sally');
   INSERT INTO student (name) VALUES ('Curly');
@@ -44,11 +46,6 @@ const readSchools = async () => {
 const readStudents = async () => {
   const SQL = `SELECT * FROM student;`;
   const response = await client.query(SQL);
-  return response.rows;
-};
-const readStudentsBySchool = async id => {
-  const SQL = `SELECT * FROM student WHERE "schoolId" = $1;`;
-  const response = await client.query(SQL, [id]);
   return response.rows;
 };
 
@@ -93,7 +90,6 @@ module.exports = {
   sync,
   readSchools,
   readStudents,
-  readStudentsBySchool,
   createStudent,
   createSchool,
   deleteStudent,

@@ -8,13 +8,13 @@ const UpdateSchool = ({ school, setSchools }) => {
 
   useEffect(() => {
     if (school) {
+      //truthy when renders
       setNewName(school.name);
       setSchoolId(school.id);
     }
   }, [school]);
 
-  const submitUpdate = ev => {
-    ev.preventDefault();
+  const submitUpdate = () => {
     axios
       .put(`/api/schools/${schoolId}`, {
         newName: newName,
@@ -26,9 +26,9 @@ const UpdateSchool = ({ school, setSchools }) => {
       .then(() => {
         setNewName("");
         setSchoolId("");
-        window.location.hash = "#";
       })
       .catch(ex => setError(ex.response.data.message));
+    window.location.hash = "#";
   };
 
   const deleteSchool = async id => {
