@@ -4,6 +4,7 @@ import CreateStudent from "./Components/CreateStudent";
 import Unenrolled from "./Components/Unenrolled";
 import SchoolList from "./Components/SchoolList";
 import UpdateStudent from "./Components/UpdateStudent";
+import UpdateSchool from "./Components/UpdateSchool";
 import qs from "qs";
 
 import axios from "axios";
@@ -21,14 +22,13 @@ const App = () => {
     window.addEventListener("hashchange", () => {
       setParams(qs.parse(window.location.hash.slice(1)));
     });
-    console.log("params from App: ", params);
   }, []);
 
   useEffect(() => {
     Promise.all([axios.get("/api/schools"), axios.get("/api/students")])
       .then(responses => responses.map(response => response.data))
       .then(results => {
-        console.log(results);
+        //console.log(results);
         setSchools(results[0]);
         setStudents(results[1]);
       })
@@ -53,15 +53,17 @@ const App = () => {
               </li>
             </ul>
           </div>
-          <div id="createStudent">
-            <CreateStudent
-              students={students}
-              setStudents={setStudents}
-              schools={schools}
-            />
-          </div>
-          <div id="createSchool">
-            <CreateSchool schools={schools} setSchools={setSchools} />
+          <div className="creates">
+            <div id="createStudent">
+              <CreateStudent
+                students={students}
+                setStudents={setStudents}
+                schools={schools}
+              />
+            </div>
+            <div id="createSchool">
+              <CreateSchool schools={schools} setSchools={setSchools} />
+            </div>
           </div>
           <div id="unenrolled">
             <Unenrolled
@@ -71,29 +73,31 @@ const App = () => {
             />
           </div>
           <div id="schoolList">
-            <ul>
-              {schools.map(school => {
-                return (
-                  <div key={school.id}>
-                    <SchoolList
-                      school={school}
-                      students={students}
-                      setStudents={setStudents}
-                    />
-                  </div>
-                );
-              })}
-            </ul>
+            {schools.map(school => {
+              return (
+                <div key={school.id}>
+                  <SchoolList
+                    school={school}
+                    students={students}
+                    setStudents={setStudents}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
       {view === "student" && (
         <UpdateStudent
-          students={students}
+          student={students.find(student => student.id == params.id)}
           setStudents={setStudents}
-          setSchools={setSchools}
           schools={schools}
-          params={params}
+        />
+      )}
+      {view === "school" && (
+        <UpdateSchool
+          school={schools.find(school => school.id == params.id)}
+          setSchools={setSchools}
         />
       )}
     </div>

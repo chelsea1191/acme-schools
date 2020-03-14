@@ -61,7 +61,7 @@ const SchoolList = ({ school, students, setStudents }) => {
         {filteredStudents.map(student => {
           return (
             <li key={student.id}>
-              {student.name}{" "}
+              <a href={`#view=student&id=${student.id}`}>{student.name} </a>
               <button value={student.id} onClick={handleDelete}>
                 Unenroll
               </button>

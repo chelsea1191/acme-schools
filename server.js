@@ -46,9 +46,13 @@ app.post("/api/createSchool", (req, res, next) => {
 });
 ///////////////////put////////////////////
 app.put("/api/students/:id", (req, res, next) => {
-  console.log("server side: ", req.body);
   db.updateStudent(req.body.studentName, req.body.schoolId, req.body.studentId)
     .then(student => res.send(student))
+    .catch(next);
+});
+app.put("/api/schools/:id", (req, res, next) => {
+  db.updateSchool(req.body.newName, req.body.schoolId)
+    .then(school => res.send(school))
     .catch(next);
 });
 

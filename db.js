@@ -65,13 +65,17 @@ const createSchool = async name => {
 };
 //////////////////put///////////////////
 const updateStudent = async (studentName, schoolId, studentId) => {
-  console.log("back end: ", studentName, schoolId, studentId);
   const SQL = `UPDATE student SET name = ($1), "schoolId" = ($2) WHERE (id) = ($3) returning *`;
   const response = await client.query(SQL, [
     studentName,
     schoolId || null,
     studentId
   ]);
+  return response.rows[0];
+};
+const updateSchool = async (newName, schoolId) => {
+  const SQL = `UPDATE school SET name = ($1) WHERE (id) = ($2) returning *`;
+  const response = await client.query(SQL, [newName, schoolId]);
   return response.rows[0];
 };
 
@@ -94,5 +98,6 @@ module.exports = {
   createSchool,
   deleteStudent,
   deleteSchool,
-  updateStudent
+  updateStudent,
+  updateSchool
 };

@@ -26,20 +26,6 @@ form {
   border-radius: 4px;
 }
 
-input[type="text"] {
-  width: 480px;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-}
-.jumbotron[id="card"] {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 15px;
-  padding-right: 0px;
-}
-
 .lead {
   text-align: center;
 }
@@ -52,56 +38,13 @@ ul {
   list-style-position: inside;
   list-style-type: circle;
 }
-.link {
-  font-weight: bold;
-  font-size: x-large;
-  color: 333538;
-}
-
-.img-thumbnail {
-  height: 50px;
-  width: 50px;
-  border-radius: 40px;
-}
-.img-thumbnail-lg {
-  height: 100px;
-  width: 100px;
-  border-radius: 40px;
-}
-
-.inline {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  font-weight: bolder;
-}
 
 .archived span {
   text-decoration: line-through;
 }
 
-.card {
-  background: #bfdbff;
-  box-shadow: 6px 6px 5px gray;
-  padding: 10px;
-  margin: 20px;
-}
-.card_title {
-  height: 80px;
-  width: 100%;
-  position: relative;
-}
-
-.recipe_title {
-  font-size: 1.7rem;
-  bottom: 0;
-  position: relative;
-  font-weight: bold;
-}
-.title {
-  font-size: 1.5rem;
-  font-weight: bolder;
-}
 .container {
   border: 1px solid black;
+  padding: 10px;
+  margin: 20px;
 }
