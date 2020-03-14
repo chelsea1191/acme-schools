@@ -102,3 +102,6 @@ ul {
   font-size: 1.5rem;
   font-weight: bolder;
 }
+.container {
+  border: 1px solid black;
+}

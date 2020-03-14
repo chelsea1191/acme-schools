@@ -51,27 +51,26 @@ const readStudentsBySchool = async id => {
   const response = await client.query(SQL, [id]);
   return response.rows;
 };
-const readUnenrolledStudents = async () => {
-  const SQL = `SELECT * FROM student WHERE "schoolId" IS NULL;`;
-  const response = await client.query(SQL);
-  return response.rows;
-};
 
 ////////////////post///////////////////
-const createStudent = async ({ name, schoolId }) => {
+const createStudent = async (name, schoolId) => {
   const SQL = `INSERT INTO student (name, "schoolId") VALUES ($1, $2) returning *;`;
   const response = await client.query(SQL, [name, schoolId]);
   return response.rows[0];
 };
-const createSchool = async ({ name }) => {
+const createSchool = async name => {
   const SQL = `INSERT INTO school (name) VALUES ($1) returning *`;
   const response = await client.query(SQL, [name]);
   return response.rows[0];
 };
 //////////////////put///////////////////
-const updateStudent = async ({ studentId, schoolId }) => {
+const updateStudent = async input => {
+  console.log("back end: ", input);
   const SQL = `UPDATE student SET "schoolId" = ($2) WHERE (id) = ($1) returning *`;
-  const response = await client.query(SQL, [studentId, schoolId]);
+  const response = await client.query(SQL, [
+    input.studentSelection,
+    input.schoolId
+  ]);
   return response.rows[0];
 };
 //////////////////delete///////////////////
@@ -89,7 +88,6 @@ module.exports = {
   readSchools,
   readStudents,
   readStudentsBySchool,
-  readUnenrolledStudents,
   createStudent,
   createSchool,
   deleteStudent,
