@@ -21,7 +21,7 @@ const SchoolList = ({ school, students, setStudents }) => {
       })
       .then(
         axios.get("/api/students").then(response => setStudents(response.data))
-      );
+      ); //need to filter instead of making another API call
   };
 
   const handleSelect = ev => {

@@ -15,8 +15,7 @@ const App = () => {
   const [unenrolled, setUnenrolled] = useState([]);
 
   const [params, setParams] = useState(qs.parse(window.location.hash.slice(1)));
-
-  const { view, id } = params;
+  const { view } = params;
 
   useEffect(() => {
     window.addEventListener("hashchange", () => {
@@ -28,7 +27,6 @@ const App = () => {
     Promise.all([axios.get("/api/schools"), axios.get("/api/students")])
       .then(responses => responses.map(response => response.data))
       .then(results => {
-        //console.log(results);
         setSchools(results[0]);
         setStudents(results[1]);
       })
@@ -43,10 +41,11 @@ const App = () => {
             <h1>Acme Schools</h1>
             <ul>
               <li>
-                {schools.length} {schools.length === 1 ? "School" : "Schools"}
+                {schools.length} &nbsp;
+                {schools.length === 1 ? "School" : "Schools"}
               </li>
               <li>
-                {students.length}{" "}
+                {students.length} &nbsp;
                 {students.length === 1 ? "Student" : "Students"} (
                 {students.length - unenrolled.length}
                 &nbsp; enrolled)

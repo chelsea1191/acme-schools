@@ -39,6 +39,7 @@ const CreateStudent = ({ students, setStudents, schools }) => {
         <br />
         <div id="selection">
           <select onChange={onSchoolChange}>
+            <option value="none">-- enroll in school --</option>
             {schools.map(school => {
               return (
                 <option value={school.id} key={school.id}>

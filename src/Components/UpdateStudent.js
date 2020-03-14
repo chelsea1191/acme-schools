@@ -23,7 +23,7 @@ const UpdateStudent = ({ student, setStudents, schools }) => {
       })
       .then(
         axios.get("/api/students").then(response => setStudents(response.data))
-      )
+      ) //need to filter instead of making another API call
       .then(() => {
         setNewName("");
         setSchoolId("");
@@ -36,7 +36,7 @@ const UpdateStudent = ({ student, setStudents, schools }) => {
       .delete(`/api/deleteStudent/${id}`)
       .then(
         axios.get("/api/students").then(response => setStudents(response.data))
-      );
+      ); //need to filter instead of making another API call
   };
 
   const handleSelect = ev => {
